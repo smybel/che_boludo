@@ -191,7 +191,8 @@ input[type=text],textarea{background:#fff;color:var(--paperink);border:3px solid
 @keyframes dropIn{from{transform:translateY(-50px) rotateX(75deg) scale(.9);opacity:0}}
 #black.glow{box-shadow:0 0 0 4px var(--hi),0 0 60px rgba(255,255,255,.35)}
 #black .blank{display:inline-block;width:3.2em;border-bottom:3px solid #fff;margin:0 2px;transform:translateY(-3px)}
-#black .fill{color:var(--hi);background:rgba(255,255,255,.1);border-radius:4px;padding:0 3px}
+#black .fill,.best .fill{color:var(--hi);background:rgba(255,255,255,.1);border-bottom:3px solid var(--hi);border-radius:4px 4px 0 0;padding:0 4px;margin:0 2px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+#black .fillq{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
 #black .fillq{margin-top:12px}
 #black .bfoot{position:absolute;left:18px;right:18px;bottom:14px;display:flex;justify-content:space-between;align-items:center;font:900 10px var(--body);letter-spacing:.06em;text-transform:uppercase;color:#8d88a3}
 #black .pick{background:#fff;color:#111;border-radius:999px;padding:3px 8px}
@@ -209,10 +210,26 @@ input[type=text],textarea{background:#fff;color:var(--paperink);border:3px solid
 .sub{display:flex;position:relative;transition:opacity .4s,transform .4s cubic-bezier(.3,1.5,.5,1),filter .4s}
 .sub .card{width:calc(var(--cw)*1.08);height:calc(var(--ch)*1.08)}
 .sub .card .front{font-size:calc(var(--cw)*.108);padding:13px}
-.sub .card + .card{margin-left:calc(var(--cw)*-.42);transform:translateY(14px) rotate(4deg)}
+.sub.multi{gap:6px;padding:6px;border-radius:16px;background:rgba(255,255,255,.1)}
+.sub.multi .card{width:calc(var(--cw)*.7);height:calc(var(--ch)*.7)}
+.sub.multi .card .front{font-size:calc(var(--cw)*.08);padding:9px}
+#stage.multi .left{flex-direction:column;align-items:center;margin-right:0;gap:12px}
+#stage.multi #deck{display:none}
+#stage.multi #event{position:static;width:calc(var(--cw)*1.5)}
+#stage.multi #event.show{animation-name:spinInM}
+#stage.multi #table{gap:30px 12px}
+@media (max-width:820px){.sub.multi .card{width:calc(var(--cw)*.9);height:calc(var(--ch)*.9)}.sub.multi .card .front{font-size:calc(var(--cw)*.1)}#stage.multi .left{flex-direction:row}}
+#handwrap,#hand{transition:height .45s cubic-bezier(.2,.8,.2,1),transform .45s cubic-bezier(.2,.8,.2,1)}
+#bottom.peek #handwrap{height:calc(var(--ch)*.42 + 24px)}
+#bottom.peek #hand{transform:translateY(calc(var(--ch)*.58 + 38px))}
 .sub.pickable{cursor:pointer}
 .sub.pickable:hover,.sub.pickable:focus-visible{transform:translateY(-10px)}
-.sub.mine{opacity:.45;cursor:not-allowed}
+.sub.multi:hover,.sub.multi:focus-within,.sub.multi:focus-visible{transform:scale(1.4);z-index:30;background:var(--bg2);box-shadow:0 12px 40px rgba(0,0,0,.45)}
+.sub.multi.pickable:hover,.sub.multi.pickable:focus-visible{transform:translateY(-10px) scale(1.4)}
+.sub.multi.dim:hover .card{opacity:1;filter:none}
+@media (max-width:820px){.sub.multi:hover,.sub.multi:focus-within,.sub.multi:focus-visible,.sub.multi.pickable:hover{transform:scale(1.12)}}
+.sub.mine{cursor:not-allowed}
+.sub.mine .face{outline:3px dashed rgba(255,255,255,.75);outline-offset:3px}
 .sub.scan .front{box-shadow:0 0 0 4px var(--hi)}
 .sub.winner{transform:scale(1.12) rotate(-2deg);z-index:5}
 .sub.winner .front{box-shadow:0 0 0 4px var(--hi),0 0 40px rgba(255,255,255,.5)}
@@ -231,7 +248,7 @@ input[type=text],textarea{background:#fff;color:var(--paperink);border:3px solid
 .card.down .inner{transform:rotateY(180deg)}
 .face{position:absolute;inset:0;border-radius:13px;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;border:3px solid var(--edge)}
 .front{background:var(--paper);color:var(--paperink);padding:11px;display:flex;flex-direction:column;justify-content:space-between;font-weight:900;font-size:calc(var(--cw)*.1);line-height:1.17;transition:box-shadow .25s}
-.front .txt{overflow-wrap:anywhere}
+.front .txt{overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto}
 .front .blanktxt{color:#8a8296;font-style:italic}
 .back{transform:rotateY(180deg);background:var(--hot);display:grid;place-items:center}
 .back b{font:400 calc(var(--cw)*.22) var(--disp);color:#fff;text-shadow:0 3px 0 var(--edge)}
@@ -288,7 +305,7 @@ textarea{min-height:96px;resize:vertical}
 .rank li .sc{margin-left:auto;font:400 22px var(--disp)}
 .best{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}
 .best li{background:#111;border-radius:12px;padding:9px 12px;font-size:14px;line-height:1.35}
-.best .fill{color:var(--hi)}
+
 .best small{display:block;color:#a9a4bd;margin-top:3px}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
@@ -439,7 +456,7 @@ textarea{min-height:96px;resize:vertical}
   <div class="seg"><button type="button" id="soundBtn"></button></div>
   <h3 data-i="sHelp"></h3>
   <div class="seg"><button type="button" id="rulesBtn" data-i="sRules"></button></div>
-  <p class="tagline" style="margin-top:16px">CheBoludo! · v1.7</p>
+  <p class="tagline" style="margin-top:16px">CheBoludo! · v1.9</p>
   <div class="actions"><button class="btn" id="setClose" type="button" data-i="bClose"></button></div>
 </div></div>
 
@@ -505,7 +522,7 @@ es:{
  dTitle:'Mi <span>mazo</span>',dIntro:'Una carta por línea. Se guarda en este navegador y se suma a los mazos elegidos.',dWhite:'Respuestas (cartas blancas)',dWhitePh:'El primo que vende cripto\nUn asado bajo la lluvia',dBlack:'Preguntas (cartas negras) · usá ___ para el espacio en blanco',dBlackPh:'Lo mejor de las vacaciones fue ___.',
  oWinYou:'¡<span>Ganaste</span>!',oWinRando:'Ganó el <span>fantasma</span>',oWin:'Ganó <span>{name}</span>',oSubYou:'Tu gusto es dudoso, pero rinde.',oSubRando:'Perdieron contra cartas al azar. Piénsenlo.',oSub:'La próxima jugale al gusto del Zar.',oBest:'Mejores jugadas',oBy:'{name} · ronda {n}',
  rTitle:'Cómo se <span>juega</span>',
- rules:['Cada ronda sale una <b>carta negra</b> con una pregunta o un espacio en blanco. Todos menos el <b>Zar</b> juegan una carta blanca (o dos, si dice "Elegí 2").','Las respuestas se mezclan y se dan vuelta. El Zar elige su favorita y quien la jugó suma un punto. En modo <b>Votación</b> no hay Zar: votan todos.','<b>Gustos:</b> cada bot muestra qué humor le gusta (Absurdo, Negro, Tierno, Nerd, Asco, Argento). Jugale al juez. También premian las cartas que escribís vos.','<b>Vista previa:</b> pasá el mouse por una carta para verla dentro de la frase. Doble clic la juega al toque. Teclas 1–9 eligen, P juega.','<b>Eventos:</b> ×2 Doble o Nada · ↺ Día del Revés · ◐ A Ciegas · ✎ Estilo Libre · $ El Robo · ⇄ Pasamanos · ⏱ Papa Caliente.','<b>Timba:</b> apostá 1 punto y jugá una segunda respuesta. Si gana cualquiera de las dos, recuperás el punto. Si no, se lo lleva el ganador.','<b>Mano nueva</b> cambia toda tu mano por 1 punto. <b>Descartar</b> (la × de cada carta) cambia hasta 3 por ronda. <b>Saltear</b> cambia la pregunta, 3 veces por partida.','<b>Mazos y nivel:</b> en el lobby elegís qué mazos entran, si el nivel es Familiar o Picante, y podés armar tu propio mazo.']
+ rules:['Cada ronda sale una <b>carta negra</b> con una pregunta o un espacio en blanco. Todos menos el <b>Zar</b> juegan una carta blanca (o dos, si dice "Elegí 2").','Las respuestas se mezclan y se dan vuelta. El Zar elige su favorita y quien la jugó suma un punto. En modo <b>Votación</b> no hay Zar: votan todos.','<b>Gustos:</b> cada bot muestra qué humor le gusta (Absurdo, Negro, Tierno, Nerd, Asco, Argento). Jugale al juez. También premian las cartas que escribís vos.','<b>Vista previa:</b> pasá el mouse por una carta para verla dentro de la frase. Doble clic la juega al toque. Teclas 1–9 eligen, P juega.','<b>Eventos:</b> ×2 Doble o Nada · ↺ Día del Revés · ◐ A Ciegas · ✎ Estilo Libre · $ El Robo · ⇄ Pasamanos · ⏱ Papa Caliente.','<b>Timba:</b> apostá 1 punto y jugá una segunda respuesta. Si gana cualquiera de las dos, recuperás el punto. Si no, se lo lleva el ganador.','<b>Mano nueva</b> cambia toda tu mano por 1 punto. <b>Descartar</b> (la × de cada carta) tira hasta 3 por ronda, además de las que jugás; se reponen en la ronda siguiente. <b>Saltear</b> cambia la pregunta, 3 veces por partida.','<b>Mazos y nivel:</b> en el lobby elegís qué mazos entran, si el nivel es Familiar o Picante, y podés armar tu propio mazo.']
 },
 en:{
  bSkin:'🎨 Theme',bRules:'Rules',bExit:'Leave',bStart:'▶ Play',bNext:'Next round →',bGot:'Got it',bCancel:'Cancel',bMake:'Make card',bSave:'Save deck',bLobby:'Back to lobby',bAgain:'Play again',bDeck:'✎ Make my own deck',
@@ -539,7 +556,7 @@ en:{
  dTitle:'My <span>deck</span>',dIntro:'One card per line. It is saved in this browser and added to the decks you picked.',dWhite:'Answers (white cards)',dWhitePh:'The cousin who sells crypto\nA barbecue in the rain',dBlack:'Questions (black cards) · use ___ for the blank',dBlackPh:'The best part of the holiday was ___.',
  oWinYou:'You <span>win!</span>',oWinRando:'The <span>ghost</span> wins',oWin:'<span>{name}</span> wins',oSubYou:'Your taste is questionable, and it paid off.',oSubRando:'You all lost to random cards. Think about that.',oSub:'Next time, play to the Czar\'s taste.',oBest:'Best plays',oBy:'{name} · round {n}',
  rTitle:'How to <span>play</span>',
- rules:['Each round a <b>black card</b> asks a question or has a blank. Everyone except the <b>Czar</b> plays a white card (or two, when it says "Pick 2").','The answers are shuffled and flipped. The Czar picks a favourite and whoever played it scores a point. In <b>Vote</b> mode there is no Czar: everyone votes.','<b>Tastes:</b> every bot shows the humour it likes (Absurd, Dark, Wholesome, Nerdy, Gross, Argentine). Play to the judge. They also reward cards you write yourself.','<b>Live preview:</b> hover a card to see it inside the sentence. Double-click plays it right away. Keys 1–9 select, P plays.','<b>Events:</b> ×2 Double Down · ↺ Opposite Day · ◐ Blindfold · ✎ Freestyle · $ Heist · ⇄ Swap Meet · ⏱ Hot Potato.','<b>Gambling:</b> bet 1 point and play a second answer. If either one wins you get the point back. If not, the winner takes it.','<b>New hand</b> swaps your whole hand for 1 point. <b>Trash</b> (the × on each card) swaps up to 3 a round. <b>Skip</b> changes the question, 3 times per game.','<b>Decks and level:</b> in the lobby you choose which decks are in, whether the level is Family or Spicy, and you can build your own deck.']
+ rules:['Each round a <b>black card</b> asks a question or has a blank. Everyone except the <b>Czar</b> plays a white card (or two, when it says "Pick 2").','The answers are shuffled and flipped. The Czar picks a favourite and whoever played it scores a point. In <b>Vote</b> mode there is no Czar: everyone votes.','<b>Tastes:</b> every bot shows the humour it likes (Absurd, Dark, Wholesome, Nerdy, Gross, Argentine). Play to the judge. They also reward cards you write yourself.','<b>Live preview:</b> hover a card to see it inside the sentence. Double-click plays it right away. Keys 1–9 select, P plays.','<b>Events:</b> ×2 Double Down · ↺ Opposite Day · ◐ Blindfold · ✎ Freestyle · $ Heist · ⇄ Swap Meet · ⏱ Hot Potato.','<b>Gambling:</b> bet 1 point and play a second answer. If either one wins you get the point back. If not, the winner takes it.','<b>New hand</b> swaps your whole hand for 1 point. <b>Trash</b> (the × on each card) throws away up to 3 a round, on top of the ones you play; they are replaced next round. <b>Skip</b> changes the question, 3 times per game.','<b>Decks and level:</b> in the lobby you choose which decks are in, whether the level is Family or Spicy, and you can build your own deck.']
 }};
 const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 let LANG=store.get('sf_lang',(navigator.language||'es').toLowerCase().startsWith('en')?'en':'es');
@@ -856,7 +873,7 @@ R|1|La tía que pregunta "¿y el novio?"|The aunt who asks "so, any boyfriend?"
 R|2|Un vino de oferta y malas decisiones|Cheap wine and bad decisions
 D|2|Meterle los cuernos a la dieta|Cheating on your diet
 D|2|Mear sentado por cansancio|Peeing sitting down because you're tired`;
-const BLACK=BLACK_RAW.split('\n').map(l=>{const [pack,lvl,es,en]=l.split('|');return{pack,lvl:+lvl,es,en,pick:Math.max(1,(es.match(/___/g)||[]).length)}});
+const BLACK=BLACK_RAW.split('\n').map(l=>{const [pack,lvl,es,en]=l.split('|');return{pack,lvl:+lvl,es,en,pick:Math.max(1,(es.match(/_{3,}/g)||[]).length)}});
 const WHITE=WHITE_RAW.split('\n').map(l=>{const [tag,lvl,es,en]=l.split('|');return{tag,lvl:+lvl,es,en}});
 
 const BOTS=[
@@ -881,7 +898,13 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 const rand=(a,b)=>a+Math.random()*(b-a);
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const rint=n=>{try{const u=new Uint32Array(1);crypto.getRandomValues(u);return u[0]%n}catch(e){return Math.floor(Math.random()*n)}};
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rint(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
+/* memoria de cartas vistas: las que salieron hace poco van al fondo del mazo, las nuevas primero */
+let SEENM=(()=>{try{const v=JSON.parse(localStorage.getItem('cb_seen')||'{}');return v&&typeof v==='object'?v:{}}catch(e){return{}}})(),seenT=0;
+const seenKey=x=>String(x||'').slice(0,60);
+function markSeen(x){if(!x)return;SEENM[seenKey(x)]=Date.now();clearTimeout(seenT);seenT=setTimeout(()=>{SEENM=Object.fromEntries(Object.entries(SEENM).sort((a,b)=>b[1]-a[1]).slice(0,1500));try{localStorage.setItem('cb_seen',JSON.stringify(SEENM))}catch(e){}},1000)}
+function freshPile(arr,txt){const H3=3*3600e3,a=shuffle(arr.slice()).map(x=>({x,k:Math.floor((SEENM[seenKey(txt(x))]||0)/H3)}));a.sort((p,q)=>q.k-p.k);return a.map(o=>o.x)}
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function mk(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1002,11 +1025,11 @@ const judges=()=>S.players.filter(p=>!p.rando);
 const isOpp=()=>S.mut&&S.mut.id==='opposite';
 const isBlind=()=>S.mut&&S.mut.id==='blind'&&S.phase==='play';
 function drawWhite(){
-  if(!whitePile.length){whitePile=shuffle(whiteDiscard.splice(0));if(!whitePile.length)whitePile=shuffle(whitePool.map(x=>({...x})))}
-  return{...whitePile.pop(),uid:++UID};
+  if(!whitePile.length){whitePile=freshPile(whiteDiscard.splice(0),c=>c.es);if(!whitePile.length)whitePile=freshPile(whitePool.map(x=>({...x})),c=>c.es)}
+  const c={...whitePile.pop(),uid:++UID};markSeen(c.es);return c;
 }
 function drawBlack(one){
-  for(let i=0;i<60;i++){if(!blackPile.length)blackPile=shuffle(blackPool.slice());const b=blackPile.pop();if(!one||b.pick===1)return b}
+  for(let i=0;i<60;i++){if(!blackPile.length)blackPile=freshPile(blackPool,b=>b.es);const b=blackPile.pop();if(!one||b.pick===1){markSeen(b.es);return b}}
   return blackPool[0];
 }
 function guard(id){if(id!==S.gameId)throw 'stale'}
@@ -1051,10 +1074,10 @@ function makeWhite(c,down=false){
 function fillHTML(b,fill){
   const txt=esc(ct(b));let i=0;
   if(fill&&fill.length){
-    if(txt.includes('___'))return txt.replace(/___/g,()=>{const f=fill[i++];return f!=null?`<span class="fill">${esc(f)}</span>`:'<span class="blank"></span>'});
-    return txt+`<div class="fillq"><span class="fill">${esc(fill.join(' + '))}</span></div>`;
+    if(/_{3,}/.test(txt))return txt.replace(/_{3,}/g,()=>{const f=fill[i++];return f!=null?`<span class="fill">${esc(f)}</span>`:'<span class="blank"></span>'});
+    return txt+`<div class="fillq">${fill.map(f=>`<span class="fill">${esc(f)}</span>`).join(' ')}</div>`;
   }
-  return txt.replace(/___/g,'<span class="blank"></span>');
+  return txt.replace(/_{3,}/g,'<span class="blank"></span>');
 }
 function renderBlack(cards,mask){
   const b=$('#black');S.shown=cards||null;S.mask=mask||null;if(!S.black){b.innerHTML='';return}
@@ -1070,7 +1093,7 @@ function renderEvent(){if(S.mut)$('#event').innerHTML=`<div class="ei">${S.mut.i
 
 /* ============ RENDER: hand ============ */
 function canPlay(){return S.phase==='play'&&humanPlays()&&S.humanSubs<S.need}
-function canTrash(){return canPlay()&&S.set.trash&&S.trashed<3&&S.humanSubs===0}
+function canTrash(){return canPlay()&&S.set.trash&&S.trashed<3&&S.humanSubs===0&&human().hand.filter(c=>!c.blank).length-1>=S.black.pick*S.need}
 function makeHandSlot(c){
   const slot=mk('div','hs');slot.tabIndex=0;slot.setAttribute('role','button');slot.style.transition='none';slot._card=c;
   slot.appendChild(makeWhite(c,isBlind()));
@@ -1107,6 +1130,7 @@ function syncHand(animate=true,fromRect=null){
   return Promise.resolve();
 }
 function refreshHand(){
+  $('#bottom').classList.toggle('peek',!canPlay());
   const hb=$('#hand');hb.classList.toggle('idle',!canPlay());hb.classList.toggle('cantrash',canTrash());
   const blind=isBlind();
   for(const [c,s] of handEls){
@@ -1123,7 +1147,7 @@ function trashCard(c){
   h.hand=h.hand.filter(x=>x!==c);if(!c.written)whiteDiscard.push(c);
   handEls.delete(c);SFX.deal();
   if(s)flyTo(s.firstChild,{left:innerWidth+80,top:innerHeight,width:10,height:10},{rot:60}).then(()=>s.remove());
-  h.hand.push(drawWhite());syncHand(true);updateBar();previewBlack(S.selected);
+  layoutHand();refreshHand();updateBar();previewBlack(S.selected);
 }
 
 /* ============ BAR ============ */
@@ -1169,12 +1193,12 @@ function stopTimer(){timerTok++;$('#clock').hidden=true}
 function show(screen){$('#lobby').hidden=screen!=='lobby';$('#game').hidden=screen!=='game';$('#exitBtn').hidden=screen!=='game';$('#hinfo').hidden=screen!=='game'}
 function startGame(){
   S.gameId++;const id=S.gameId;const set=S.set=JSON.parse(JSON.stringify(L));
-  set.name=(set.name||'').trim().slice(0,14)||(LANG==='es'?'Vos':'You');
+  set.name=(set.name||'').trim().slice(0,14)||t('defName');
   const p=pools(set);whitePool=p.W;blackPool=p.B;
   S.players=[{name:set.name,human:true,taste:[],score:0,hand:[],av:set.av,color:set.av.c}];
   botOrder.slice(0,set.bots).forEach(b=>S.players.push({...b,taste:b.taste.slice(),color:b.av.c,score:0,hand:[]}));
   if(set.rando)S.players.push({name:'Don Azar',rando:true,taste:[],score:0,hand:[],av:{ghost:true},color:'#e9e4ff'});
-  whitePile=shuffle(whitePool.map(x=>({...x})));whiteDiscard=[];blackPile=shuffle(blackPool.slice());
+  whitePile=freshPile(whitePool.map(x=>({...x})),c=>c.es);whiteDiscard=[];blackPile=freshPile(blackPool,b=>b.es);
   Object.assign(S,{round:0,czarIdx:0,czar:null,black:null,mut:null,phase:'deal',selected:[],skips:3,history:[],champ:null,subs:[]});
   resolveHuman=resolveSkip=null;stopTimer();
   $('#table').innerHTML='';$('#hand').innerHTML='';handEls.clear();renderBlack();$('#event').classList.remove('show');
@@ -1194,7 +1218,7 @@ async function clearTable(){
   if(subs.length){const far={left:innerWidth+100,top:innerHeight/3,width:10,height:10};await Promise.all(subs.map((e,i)=>flyTo(e,far,{delay:i*45,dur:420,rot:30})))}
   $('#table').innerHTML='';$('#black').classList.remove('glow');
 }
-async function showBlack(b){S.black=b;const el=$('#black');el.classList.remove('in');void el.offsetWidth;renderBlack();el.classList.add('in');SFX.flip();await sleep(650)}
+async function showBlack(b){S.black=b;$('#stage').classList.toggle('multi',b.pick>1);const el=$('#black');el.classList.remove('in');void el.offsetWidth;renderBlack();el.classList.add('in');SFX.flip();await sleep(650)}
 
 async function playRound(id){
   S.round++;S.subs=[];S.mut=null;S.selected=[];S.humanSubs=0;S.need=1;S.rebooted=false;S.gambled=false;S.trashed=0;S.phase='deal';
@@ -1309,7 +1333,7 @@ async function submitHuman(){
 }
 async function addSub(owner,cards,fromRect){
   const sub={owner,cards,votes:0};
-  const e=mk('div','sub');cards.forEach(c=>e.appendChild(makeWhite(c,true)));
+  const e=mk('div','sub'+(cards.length>1?' multi':''));cards.forEach(c=>e.appendChild(makeWhite(c,true)));
   e.insertAdjacentHTML('beforeend',`<div class="own" style="color:${owner.color}">${esc(owner.name)}</div><div class="vt"></div>`);
   e._sub=sub;sub.el=e;$('#table').appendChild(e);S.subs.push(sub);
   owner.submitted=true;updatePlayers();SFX.deal();
@@ -1459,7 +1483,7 @@ function toLobby(){
 
 /* ============ write + deck modals ============ */
 let writing=null;
-function openWrite(c){writing=c;$('#writePrompt').textContent=ct(S.black).replace(/___/g,'_____');$('#writeText').value='';$('#write').hidden=false;setTimeout(()=>$('#writeText').focus(),50)}
+function openWrite(c){writing=c;$('#writePrompt').textContent=ct(S.black).replace(/_{3,}/g,'_____');$('#writeText').value='';$('#write').hidden=false;setTimeout(()=>$('#writeText').focus(),50)}
 $('#writeCancel').onclick=()=>{$('#write').hidden=true;writing=null};
 $('#writeOk').onclick=()=>{
   const v=$('#writeText').value.trim();
@@ -1496,7 +1520,7 @@ function relang(){
   $('#langBtn').innerHTML=FLAG[LANG]+LNAME[LANG]+' ▾';
   $$('[data-lang]').forEach(b=>{b.innerHTML=FLAG[b.dataset.lang]+LNAME[b.dataset.lang];b.setAttribute('aria-pressed',b.dataset.lang===LANG)});
   paintSound();
-  $('#optName').placeholder=LANG==='es'?'Vos':'You';
+  $('#optName').placeholder=LANG==='es'?'Tu nombre o apodo':'Your name or nickname';
   $('#rulesList').innerHTML=I[LANG].rules.map(r=>`<li>${r}</li>`).join('');
   $('#howList').innerHTML=I[LANG][EXT?'howExt':'how'].map(r=>`<li>${r}</li>`).join('');
   if(netMsgKey)$('#netMsg').textContent=t(netMsgKey);
@@ -1812,12 +1836,12 @@ function hostPush(){
   sstore.set('cb_host',{code:NET.code,G,H:NET.H,dk:NET.dk});renderNet();
 }
 function wPool(){const s=NET.G.set,o=[];WHITE.forEach((c,i)=>{if(s.pk.includes(c.tag)&&c.lvl<=s.lv)o.push(i)});if(NET.dk)NET.dk.w.forEach((_,i)=>o.push(CW+i));return o}
-function drawW(){const H=NET.H;if(!H.wp.length){H.wp=shuffle(H.wd.splice(0));if(!H.wp.length)H.wp=shuffle(wPool())}return H.wp.pop()}
+function drawW(){const H=NET.H,tx=i=>(wcard(i)||{}).es;if(!H.wp.length){H.wp=freshPile(H.wd.splice(0),tx);if(!H.wp.length)H.wp=freshPile(wPool(),tx)}const c=H.wp.pop();markSeen(tx(c));return c}
 function drawB(one){
   const H=NET.H,s=NET.G.set;
   for(let k=0;k<80;k++){
-    if(!H.bp.length){BLACK.forEach((b,i)=>{if((b.pack==='*'||s.pk.includes(b.pack))&&b.lvl<=s.lv)H.bp.push(i)});if(NET.dk)NET.dk.b.forEach((_,i)=>H.bp.push(CW+i));shuffle(H.bp)}
-    const b=H.bp.pop();if(!one||blk(b).pick===1)return b;
+    if(!H.bp.length){BLACK.forEach((b,i)=>{if((b.pack==='*'||s.pk.includes(b.pack))&&b.lvl<=s.lv)H.bp.push(i)});if(NET.dk)NET.dk.b.forEach((_,i)=>H.bp.push(CW+i));H.bp=freshPile(H.bp,i=>blk(i).es)}
+    const b=H.bp.pop();if(!one||blk(b).pick===1){markSeen(blk(b).es);return b}
   }
   return 0;
 }
@@ -1876,7 +1900,7 @@ function toJudge(){
   const G=NET.G,H=NET.H,now=Date.now(),pick=blk(G.bk).pick,ri=G.pl.findIndex(p=>p.z);
   if(ri>=0&&(G.set.ra||H.subs.length<2)){const c=[];for(let k=0;k<pick;k++)c.push(drawW());H.subs.push({o:ri,c})}
   shuffle(H.subs);H.own=H.subs.map(s=>s.o);H.votes={};
-  Object.assign(G,{subs:H.subs.map(s=>s.c),ph:G.set.m==='vote'?'vote':'judge',vd:[],dl:G.set.tm?now+G.set.tm*1000:0,dt:G.set.tm});
+  Object.assign(G,{subs:H.subs.map(s=>s.c),mi:G.pl.map((_,i)=>H.own.indexOf(i)),ph:G.set.m==='vote'?'vote':'judge',vd:[],dl:G.set.tm?now+G.set.tm*1000:0,dt:G.set.tm});
   G.hands=G.hands.map(h=>h.filter(x=>x!=='B'));
   G.pl.forEach((p,i)=>{if(p.b)H.botAt[i]=now+rand(3000,5500)});
   hostPush();
@@ -1919,7 +1943,7 @@ function hostTick(){
     need.forEach(i=>{if(G.done.includes(i))return;const p=G.pl[i];
       const tr=!p.b&&here[p.u]&&here[p.u].presence.tr;
       if(G.set.tr&&tr&&tr.r===G.r&&Array.isArray(tr.c)){let n=H.tr[i]|0;
-        while(n<Math.min(3,tr.c.length)){const c=tr.c[n++],h=G.hands[i],k=h.indexOf(c);if(typeof c==='number'&&k>=0){h.splice(k,1,drawW());H.wd.push(c);ch=true}}
+        while(n<Math.min(3,tr.c.length)){const c=tr.c[n++],h=G.hands[i],k=h.indexOf(c);if(typeof c==='number'&&k>=0&&h.filter(x=>x!=='B').length-1>=pick){h.splice(k,1);H.wd.push(c);ch=true}}
         H.tr[i]=n}
       if(p.b){if(now>=(H.botAt[i]||0)){hostSub(i,botChoose(i,pick));ch=true}}
       else{const a=act(i);if(a&&a.k==='play'&&tryPlay(i,a,pick))ch=true}});
@@ -1958,7 +1982,7 @@ function netCanPlay(){const g=NET.g,me=NET.me;return g.ph==='play'&&me>=0&&me!==
 const wireOf=k=>{const x=netHand()[k];return x==='B'?{t:NET.wtext||'…'}:x};
 function netHandClick(i){
   if(!netCanPlay())return;const g=NET.g,pick=blk(g.bk).pick,x=netHand()[i];
-  if(x==='B'&&!NET.wtext){NET.wIdx=i;writing=null;$('#writePrompt').textContent=ctblk(g.bk).replace(/___/g,'_____');$('#writeText').value='';$('#write').hidden=false;setTimeout(()=>$('#writeText').focus(),50);return}
+  if(x==='B'&&!NET.wtext){NET.wIdx=i;writing=null;$('#writePrompt').textContent=ct(blk(g.bk)).replace(/_{3,}/g,'_____');$('#writeText').value='';$('#write').hidden=false;setTimeout(()=>$('#writeText').focus(),50);return}
   const k=NET.sel.indexOf(i);if(k>=0)NET.sel.splice(k,1);else{if(NET.sel.length>=pick)NET.sel.shift();NET.sel.push(i)}
   SFX.tick();NET.prev=NET.sel.length?NET.sel.map(wireOf):null;renderNet();
 }
@@ -2003,14 +2027,14 @@ function renderNet(force){
       return;
     }
     if($('#game').hidden){show('game');NET.keys={};$('#table').innerHTML='';$('#hand').innerHTML='';$('#black').classList.remove('glow')}
-    const me=NET.me,bk=blk(g.bk),pick=bk.pick,res=g.ph==='result'||g.ph==='over',blind=g.mu==='blind'&&g.ph==='play';
+    const me=NET.me,bk=blk(g.bk),pick=bk.pick;$('#stage').classList.toggle('multi',pick>1);const _x=0,res=g.ph==='result'||g.ph==='over',blind=g.mu==='blind'&&g.ph==='play';
     if(NET.q!==g.q){NET.q=g.q;NET.sel=[];NET.wtext='';NET.prev=null;NET.picked=null;NET.pend=null;$('#write').hidden=true;
       const b=$('#black');b.classList.remove('in');void b.offsetWidth;b.classList.add('in');SFX.flip()}
     if(NET.r!==g.r){NET.r=g.r;const cz=g.pl[g.cz];banner(t('round',{n:g.r}),cz?(g.cz===me?t('czarYou'):t('czarIs',{name:cz.n})):t('allVote'))}
     if(NET.ph!==g.ph){NET.ph=g.ph;NET.prev=null}
     const can=netCanPlay(),hand=netHand(),hk=JSON.stringify(hand);
     if(NET.hk!==hk){NET.hk=hk;NET.sel=[];NET.prev=null}
-    const canTr=can&&!!g.set.tr&&(NET.tr&&NET.tr.r===g.r?NET.tr.c.length:0)<3&&Date.now()-(NET.trAt||0)>1200;
+    const canTr=can&&!!g.set.tr&&(NET.tr&&NET.tr.r===g.r?NET.tr.c.length:0)<3&&hand.filter(x=>x!=='B').length-1>=pick&&Date.now()-(NET.trAt||0)>1200;
     const sec=(n,key,fn)=>{const k=JSON.stringify(key);if(force||NET.keys[n]!==k){NET.keys[n]=k;fn()}};
     sec('pl',[g.pl,g.cz,g.done,g.vd,g.ph,g.h,me],()=>{
       $('#players').innerHTML=g.pl.map((p,i)=>{const dn=(g.ph==='play'&&g.done.includes(i))||(g.ph==='vote'&&g.vd.includes(i));
@@ -2027,14 +2051,14 @@ function renderNet(force){
     const canPick=!res&&me>=0&&((g.ph==='judge'&&me===g.cz)||(g.ph==='vote'&&!g.vd.includes(me)))&&!fresh(NET.picked);
     sec('tb',[g.ph,g.ph==='play'?g.done.length:g.subs,g.win,g.own,g.vt,canPick,NET.picked&&NET.picked.i,pick],()=>{
       const tb=$('#table');tb.innerHTML='';
-      if(g.ph==='play'){for(let k=0;k<g.done.length;k++){const e=mk('div','sub');for(let j=0;j<pick;j++)e.appendChild(makeWhite({tag:'X',es:'',en:''},true));tb.appendChild(e)}return}
+      if(g.ph==='play'){for(let k=0;k<g.done.length;k++){const e=mk('div','sub'+(pick>1?' multi':''));for(let j=0;j<pick;j++)e.appendChild(makeWhite({tag:'X',es:'',en:''},true));tb.appendChild(e)}return}
       (g.subs||[]).forEach((cs,k)=>{
-        const e=mk('div','sub');cs.forEach(c=>e.appendChild(makeWhite(cardOf(c))));
+        const e=mk('div','sub'+(cs.length>1?' multi':''));cs.forEach(c=>e.appendChild(makeWhite(cardOf(c))));
         if(res){e.classList.add('show',k===g.win?'winner':'dim');const o=g.pl[g.own?g.own[k]:-1];e.insertAdjacentHTML('beforeend',`<div class="own">${esc(o?o.n:'?')}</div>`)}
         if(g.vt&&Array.isArray(g.vt[k]))e.insertAdjacentHTML('beforeend',`<div class="vt">${g.vt[k].map(i=>`<span class="av">${face(avOf((g.pl[i]||{}).a))}</span>`).join('')}</div>`);
         if(!res&&NET.picked&&NET.picked.q===g.q&&NET.picked.ph===g.ph&&NET.picked.i===k)e.classList.add('scan');
         if(canPick){
-          if(g.ph==='vote'&&JSON.stringify(cs)===NET.mySub)e.classList.add('mine');
+          if(g.ph==='vote'&&(Array.isArray(g.mi)?g.mi[me]===k:JSON.stringify(cs)===NET.mySub))e.classList.add('mine');
           else{e.classList.add('pickable');e.tabIndex=0;e.onclick=()=>netPick(k);e.onkeydown=ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();netPick(k)}};
             e.onmouseenter=()=>{NET.prev=cs;renderNet()};e.onmouseleave=()=>{NET.prev=null;renderNet()}}
         }
@@ -2042,7 +2066,7 @@ function renderNet(force){
       if(res&&NET.conf!==g.q){NET.conf=g.q;const w=tb.children[g.win];if(w){const r=w.getBoundingClientRect();confetti(r.left+r.width/2,r.top+r.height/2,g.own&&g.own[g.win]===me?180:70)}SFX.win()}
     });
     sec('hd',[hand,can,blind,NET.sel,NET.wtext,pick,canTr],()=>{
-      const box=$('#hand');box.innerHTML='';box.classList.toggle('idle',!can);box.classList.toggle('cantrash',canTr);
+      const box=$('#hand');box.innerHTML='';box.classList.toggle('idle',!can);$('#bottom').classList.toggle('peek',!can);box.classList.toggle('cantrash',canTr);
       hand.forEach((x,i)=>{
         const s=mk('div','hs'+(NET.sel.includes(i)?' sel':''));s.tabIndex=0;s.setAttribute('role','button');
         s.appendChild(makeWhite(x==='B'&&NET.wtext?{tag:'X',es:NET.wtext,en:NET.wtext}:cardOf(x),blind));
@@ -2107,10 +2131,10 @@ Object.assign(I.es,{
  bDeck:'📚 Mazos: crear y buscar',dTitle:'<span>Mazos</span>',dMine:'Mis mazos',dLib:'🔎 Biblioteca',dNew:'+ Crear mazo',
  dMineHint:'Los mazos marcados como “En uso” se suman a tu próxima partida. Si estás en una sala, se suman a la sala.',rDecks:'Mazos de la sala',rDecksCap:'Dentro de Claude los mazos de sala tienen un tope de tamaño y se recortan si son largos. En la versión subida a tu página no hay tope.',rDeckBtn:'📚 Crear o agregar mazos',rNoDecks:'Todavía nadie sumó mazos. Cualquiera en la sala puede crear uno o traer uno de la biblioteca.',dMineEmpty:'Todavía no tenés mazos. Creá uno o buscá en la biblioteca.',
  dSearchPh:'Buscar mazo por nombre…',dLibNA:'La biblioteca compartida funciona en la versión subida a tu página. Acá adentro podés crear y usar tus propios mazos.',dLibEmpty:'No hay mazos con ese nombre todavía.',
- dNameL:'Nombre del mazo',dBlack:'Cartas negras · preguntas',dBlackHint:'Una por línea. Poné ___ donde va la respuesta.',dWhite:'Cartas blancas · respuestas',dWhiteHint:'Una por línea.',
+ dPlays:'{n} con {k} carta(s)',dNameL:'Nombre del mazo',dBlack:'Cartas negras · preguntas',dBlackHint:'Una por línea. Marcá cada espacio en blanco con guiones bajos (___, da igual cuántos). Sin espacio o con 1 espacio se juega con 1 carta; con 2 espacios, con 2 cartas.',dWhite:'Cartas blancas · respuestas',dWhiteHint:'Una por línea.',
  dPubL:'Publicarlo en la biblioteca para que otros jugadores lo usen',dNeedName:'Ponele un nombre al mazo.',dNeedCards:'Agregá al menos una carta.',
  dUse:'Usar',dUsing:'✓ En uso',dEdit:'Editar',dDel:'Borrar',dSure:'¿Seguro?',dAdd:'+ Agregar',dAdded:'agregado',dYours:'tuyo',dView:'Ver cartas',dHide:'Ocultar',dBy:'por {name}',
- twTrD:'Cambiá hasta 3 cartas por ronda con la ×. Te llega una nueva en el momento y no cuenta la que jugás.'
+ twTrD:'Tirá hasta 3 cartas por ronda con la ×, además de las que jugás. Te quedás con menos cartas y se reponen en la ronda siguiente.'
 });
 Object.assign(I.en,{
  bSettings:'Settings',sTitle:'<span>Settings</span>',sLang:'Language',sTheme:'Colour theme',sSound:'Sound',sndOn:'🔊 Sound on',sndOff:'🔇 Sound off',sHelp:'Help',sRules:'📖 How to play',bClose:'Close',
@@ -2119,10 +2143,10 @@ Object.assign(I.en,{
  bDeck:'📚 Decks: create and search',dTitle:'<span>Decks</span>',dMine:'My decks',dLib:'🔎 Library',dNew:'+ New deck',
  dMineHint:'Decks marked “In use” are added to your next game. If you are in a room, they are added to the room.',rDecks:'Room decks',rDecksCap:'Inside Claude, room decks have a size limit and long ones are trimmed. The version uploaded to your own page has no limit.',rDeckBtn:'📚 Create or add decks',rNoDecks:'Nobody has added decks yet. Anyone in the room can create one or bring one from the library.',dMineEmpty:'You have no decks yet. Create one or search the library.',
  dSearchPh:'Search decks by name…',dLibNA:'The shared library works in the version uploaded to your own page. In here you can create and use your own decks.',dLibEmpty:'No decks with that name yet.',
- dNameL:'Deck name',dBlack:'Black cards · questions',dBlackHint:'One per line. Put ___ where the answer goes.',dWhite:'White cards · answers',dWhiteHint:'One per line.',
+ dPlays:'{n} with {k} card(s)',dNameL:'Deck name',dBlack:'Black cards · questions',dBlackHint:'One per line. Mark each blank with underscores (___, any number of them). No blank or 1 blank plays with 1 card; 2 blanks play with 2 cards.',dWhite:'White cards · answers',dWhiteHint:'One per line.',
  dPubL:'Publish it to the library so other players can use it',dNeedName:'Give the deck a name.',dNeedCards:'Add at least one card.',
  dUse:'Use',dUsing:'✓ In use',dEdit:'Edit',dDel:'Delete',dSure:'Sure?',dAdd:'+ Add',dAdded:'added',dYours:'yours',dView:'View cards',dHide:'Hide',dBy:'by {name}',
- twTrD:'Swap up to 3 cards a round with the ×. A new one arrives right away, and the card you play does not count.'
+ twTrD:'Throw away up to 3 cards a round with the ×, on top of the ones you play. Your hand stays smaller until the next round refills it.'
 });
 const FLAG={es:'<svg class="flag" viewBox="0 0 24 16"><rect width="24" height="16" fill="#74acdf"/><rect y="5.33" width="24" height="5.34" fill="#fff"/><circle cx="12" cy="8" r="1.9" fill="#f6b40e"/></svg>',
  en:'<svg class="flag" viewBox="0 0 24 16"><rect width="24" height="16" fill="#b22234"/><path d="M0 1.85h24M0 4.31h24M0 6.77h24M0 9.23h24M0 11.69h24M0 14.15h24" stroke="#fff" stroke-width="1.23"/><rect width="10" height="8.6" fill="#3c3b6e"/></svg>'};
@@ -2131,7 +2155,8 @@ const LNAME={es:'Español',en:'English'};
 const rid=()=>Math.random().toString(36).slice(2,10);
 const AUTHOR=(()=>{let a=store.get('cb_author',null);if(typeof a!=='string'){a=rid();store.set('cb_author',a)}return a})();
 const linesOf=(v,max)=>[...new Set(String(v).split('\n').map(x=>x.trim().slice(0,110)).filter(Boolean))].slice(0,max);
-const pickOf=x=>Math.min(3,Math.max(1,(x.match(/___/g)||[]).length));
+const pickOf=x=>Math.min(3,Math.max(1,(String(x).match(/_{3,}/g)||[]).length));
+const normB=x=>String(x).replace(/_{3,}/g,'___');
 let DECKS=store.get('cb_decks',null);
 if(!Array.isArray(DECKS)){DECKS=[];const o=store.get('sf_custom',null);
   if(o&&((o.w||[]).length||(o.b||[]).length))DECKS.push({id:rid(),name:'Mi mazo',w:(o.w||[]).slice(0,80),b:(o.b||[]).slice(0,40),by:AUTHOR,byName:'',mine:true,pub:false})}
@@ -2139,6 +2164,7 @@ if(!Array.isArray(L.decks))L.decks=[];
 L.decks=L.decks.filter(id=>DECKS.some(d=>d.id===id));
 const saveDecks=()=>store.set('cb_decks',DECKS);
 const deckWire=d=>({name:d.name,w:d.w,b:d.b,by:d.by,byName:d.byName||''});
+DECKS.forEach(d=>{if(Array.isArray(d.b))d.b=d.b.map(normB)});
 const cleanDeck=(d,id)=>d&&typeof d==='object'&&typeof d.name==='string'&&Array.isArray(d.w)&&Array.isArray(d.b)?{id,name:d.name.trim().slice(0,30)||'?',
   w:d.w.filter(x=>typeof x==='string').map(x=>x.slice(0,110)).slice(0,80),b:d.b.filter(x=>typeof x==='string').map(x=>x.slice(0,110)).slice(0,40),by:String(d.by||''),byName:String(d.byName||'').slice(0,14)}:null;
 const LIB={conns:[],decks:new Map(),state:'idle',fails:0},DTOP='cheboludo/v1/decks/';
@@ -2173,7 +2199,8 @@ function renderDecks(){
     $('#dSearch').hidden=LIB.state==='na';
     $('#dLibList').innerHTML=list.map(d=>deckRow(d,true)).join('');
   }
-  if(DK.tab==='edit'){$('#dBn').textContent=linesOf($('#deckB').value,40).length;$('#dWn').textContent=linesOf($('#deckW').value,80).length}
+  if(DK.tab==='edit'){const bl=linesOf($('#deckB').value,40),c=[0,0,0,0];bl.forEach(x=>c[pickOf(x)]++);
+    $('#dBn').textContent=bl.length+(bl.length?' · '+[1,2,3].filter(k=>c[k]).map(k=>t('dPlays',{n:c[k],k})).join(' · '):'');$('#dWn').textContent=linesOf($('#deckW').value,80).length}
 }
 function deckEdit(id){
   const d=DECKS.find(x=>x.id===id&&x.mine);DK.editId=d?d.id:null;DK.tab='edit';
@@ -2185,7 +2212,8 @@ $('#deckCancel').onclick=()=>$('#decks').hidden=true;
 $('#dSearch').addEventListener('input',e=>{DK.q=e.target.value;renderDecks()});
 ['#deckB','#deckW'].forEach(s=>$(s).addEventListener('input',renderDecks));
 $('#deckSave').onclick=()=>{
-  const name=$('#dName').value.trim().slice(0,30),b=linesOf($('#deckB').value,40),w=linesOf($('#deckW').value,80);
+  const name=$('#dName').value.trim().slice(0,30),b=linesOf($('#deckB').value,40).map(normB),w=linesOf($('#deckW').value,80);
+  $('#deckB').value=linesOf($('#deckB').value,40).map(normB).join('\n');
   if(!name)return $('#dEditMsg').textContent=t('dNeedName');
   if(!b.length&&!w.length)return $('#dEditMsg').textContent=t('dNeedCards');
   let d=DECKS.find(x=>x.id===DK.editId&&x.mine);const was=d&&d.pub;
